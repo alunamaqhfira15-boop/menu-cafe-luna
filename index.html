@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kopi Nostalgia - Menu Digital</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header / Identitas Kafe -->
+  <header class="header">
+    <h1>☕ Kopi Nostalgia</h1>
+    <p>Pindai & Pilih Menu Favoritmu!</p>
+  </header>
+
+  <!-- Fitur Pencarian -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Cari menu makanan atau minuman...">
+  </div>
+
+  <!-- Tombol Filter Kategori -->
+  <div class="categories">
+    <button class="filter-btn active" onclick="filterMenu('semua')">Semua</button>
+    <button class="filter-btn" onclick="filterMenu('kopi')">Kopi</button>
+    <button class="filter-btn" onclick="filterMenu('makanan')">Makanan</button>
+  </div>
+
+  <!-- Wadah Tempat Daftar Menu Ditampilkan -->
+  <main id="menuContainer" class="menu-container">
+    <!-- Data menu dari JavaScript akan dimuat otomatis di sini -->
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
