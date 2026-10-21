@@ -1,11 +1,11 @@
-// === NOMOR WHATSAPP KASIR (Telah disesuaikan: 085786485755 -> 6285786485755) ===
+// === NOMOR WHATSAPP KASIR (6285786485755) ===
 const NOMOR_WA_KAFE = "6285786485755";
 
 // === DATA MENU KAFE ===
 const dataMenu = [
   {
     id: 1,
-    nama: "Es Kopi Milkshake Senja",
+    nama: "The Loft Signature Latte",
     kategori: "kopi",
     harga: 18000,
     deskripsi: "Signature espresso + susu creamy + gula aren asli. Bikin nagih!",
@@ -104,4 +104,167 @@ function tampilkanMenu(daftar) {
 
     card.innerHTML = `
       <div class="card-img-container">
-        <img src="${item.gambar}" alt="${item.
+        <img src="${item.gambar}" alt="${item.nama}" class="card-img" loading="lazy">
+        ${item.tag ? `<span class="tag-badge">${item.tag}</span>` : ""}
+        ${!item.tersedia ? `<div class="soldout-overlay">STOK HABIS</div>` : ""}
+      </div>
+      <div class="card-body">
+        <h3 class="item-title">${item.nama}</h3>
+        <p class="item-desc">${item.deskripsi}</p>
+        <div class="card-footer">
+          <span class="item-price">${formatRupiah(item.harga)}</span>
+          ${item.tersedia 
+            ? `<button class="btn-add" onclick="tambahKeKeranjang(${item.id})">+</button>` 
+            : `<button class="btn-add" disabled style="opacity: 0.4;">+</button>`
+          }
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+// === FUNGSI FILTER BERDASARKAN KATEGORI ===
+function filterKategori(kategori, btnElement) {
+  document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
+  btnElement.classList.add("active");
+
+  if (kategori === "semua") {
+    tampilkanMenu(dataMenu);
+  } else {
+    const hasil = dataMenu.filter(item => item.kategori === kategori);
+    tampilkanMenu(hasil);
+  }
+}
+
+// === LOGIKA PENAMBAHAN ITEM KE KERANJANG ===
+function tambahKeKeranjang(id) {
+  const itemMenu = dataMenu.find(m => m.id === id);
+  const itemDiKeranjang = keranjang.find(item => item.id === id);
+
+  if (itemDiKeranjang) {
+    itemDiKeranjang.qty += 1;
+  } else {
+    keranjang.push({ ...itemMenu, qty: 1 });
+  }
+
+  updateCartBar();
+}
+
+// === LOGIKA PERUBAHAN KUANTITAS DI MODAL KERANJANG ===
+function ubahKuantitas(id, perubahan) {
+  const index = keranjang.findIndex(item => item.id === id);
+  if (index !== -1) {
+    keranjang[index].qty += perubahan;
+    if (keranjang[index].qty <= 0) {
+      keranjang.splice(index, 1);
+    }
+  }
+
+  updateCartBar();
+  renderCartModal();
+}
+
+// === PENGHITUNGAN TOTAL HARGA & JUMLAH ITEM ===
+function hitungTotal() {
+  return keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+}
+
+function hitungTotalItem() {
+  return keranjang.reduce((sum, item) => sum + item.qty, 0);
+}
+
+// === UPDATE TAMPILAN BAR BAWAH (STICKY CART BAR) ===
+function updateCartBar() {
+  const cartBar = document.getElementById("cartBar");
+  const totalItem = hitungTotalItem();
+
+  if (totalItem > 0) {
+    cartBar.classList.remove("hidden");
+    document.getElementById("cartBadgeCount").innerText = totalItem;
+    document.getElementById("cartBarTotal").innerText = formatRupiah(hitungTotal());
+  } else {
+    cartBar.classList.add("hidden");
+    tutupModalCart();
+  }
+}
+
+// === RENDER DAFTAR ITEM DI DALAM MODAL KERANJANG ===
+function renderCartModal() {
+  const listContainer = document.getElementById("cartItemsList");
+  listContainer.innerHTML = "";
+
+  if (keranjang.length === 0) {
+    listContainer.innerHTML = `<p style="text-align:center; color:#64748b; padding:15px;">Keranjangmu kosong nih.</p>`;
+  } else {
+    keranjang.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "cart-item-row";
+      row.innerHTML = `
+        <div class="cart-item-info">
+          <h4>${item.nama}</h4>
+          <p>${formatRupiah(item.harga * item.qty)}</p>
+        </div>
+        <div class="qty-controls">
+          <button class="btn-qty" onclick="ubahKuantitas(${item.id}, -1)">-</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="btn-qty" onclick="ubahKuantitas(${item.id}, 1)">+</button>
+        </div>
+      `;
+      listContainer.appendChild(row);
+    });
+  }
+
+  document.getElementById("modalTotalPrice").innerText = formatRupiah(hitungTotal());
+}
+
+// === KONTROL BUKA & TUTUP MODAL ===
+function bukaModalCart() {
+  renderCartModal();
+  document.getElementById("modalOverlay").classList.remove("hidden");
+}
+
+function tutupModalCart() {
+  document.getElementById("modalOverlay").classList.add("hidden");
+}
+
+// === FUNGSI CHECKOUT & FORMAT PESAN KE WHATSAPP ===
+function kirimKeWhatsApp() {
+  const noMeja = document.getElementById("noMeja").value.trim();
+  const namaPemesan = document.getElementById("namaPemesan").value.trim();
+  const catatan = document.getElementById("catatan").value.trim();
+
+  if (!noMeja || !namaPemesan) {
+    alert("Mohon isi Nomor Meja dan Nama Kamu terlebih dahulu ya! 🙏");
+    return;
+  }
+
+  if (keranjang.length === 0) {
+    alert("Keranjang belanjaan kamu masih kosong!");
+    return;
+  }
+
+  let pesan = `*HALO KASIR THE LOFT LATTE, ADA PESANAN BARU!* ☕✨\n\n`;
+  pesan += `📍 *No. Meja:* ${noMeja}\n`;
+  pesan += `👤 *Nama:* ${namaPemesan}\n`;
+  pesan += `-----------------------------------\n`;
+  pesan += `*RINCIAN PESANAN:*\n`;
+
+  keranjang.forEach(item => {
+    pesan += `• ${item.nama} (${item.qty}x) = ${formatRupiah(item.harga * item.qty)}\n`;
+  });
+
+  pesan += `-----------------------------------\n`;
+  pesan += `💰 *TOTAL BAYAR:* ${formatRupiah(hitungTotal())}\n`;
+
+  if (catatan) {
+    pesan += `📝 *Catatan Tambahan:* ${catatan}\n`;
+  }
+
+  pesan += `\nMohon diproses ya, terima kasih! 🙌`;
+
+  // Membuka aplikasi WhatsApp dengan pesan terformat otomatis
+  const linkWA = `https://wa.me/${NOMOR_WA_KAFE}?text=${encodeURIComponent(pesan)}`;
+  window.open(linkWA, "_blank");
+}
