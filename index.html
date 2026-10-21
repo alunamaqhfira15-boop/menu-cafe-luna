@@ -3,33 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kopi Nostalgia - Menu Digital</title>
+  <title>Kopi Senja & Chill - E-Menu</title>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Header / Identitas Kafe -->
-  <header class="header">
-    <h1>☕ Kopi Nostalgia</h1>
-    <p>Pindai & Pilih Menu Favoritmu!</p>
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo-box">☕</div>
+      <div>
+        <h1 class="brand-title">Senja & Chill Cafe</h1>
+        <p class="brand-subtitle">Nongkrong Santai, Perut Happy ✨</p>
+      </div>
+    </div>
   </header>
 
-  <!-- Fitur Pencarian -->
-  <div class="search-container">
-    <input type="text" id="searchInput" placeholder="Cari menu makanan atau minuman...">
-  </div>
+  <!-- Main Container -->
+  <main class="main-content">
+    
+    <!-- Search Bar -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Cari kuliner favoritmu di sini... 🔍">
+    </div>
 
-  <!-- Tombol Filter Kategori -->
-  <div class="categories">
-    <button class="filter-btn active" onclick="filterMenu('semua')">Semua</button>
-    <button class="filter-btn" onclick="filterMenu('kopi')">Kopi</button>
-    <button class="filter-btn" onclick="filterMenu('makanan')">Makanan</button>
-  </div>
+    <!-- Category Filters -->
+    <div class="category-list" id="categoryContainer">
+      <button class="cat-btn active" onclick="filterKategori('semua', this)">🔥 Semua</button>
+      <button class="cat-btn" onclick="filterKategori('kopi', this)">☕ Kopi Hits</button>
+      <button class="cat-btn" onclick="filterKategori('non-kopi', this)">🧋 Seger-Seger</button>
+      <button class="cat-btn" onclick="filterKategori('makanan', this)">🍟 Camilan</button>
+    </div>
 
-  <!-- Wadah Tempat Daftar Menu Ditampilkan -->
-  <main id="menuContainer" class="menu-container">
-    <!-- Data menu dari JavaScript akan dimuat otomatis di sini -->
+    <!-- Menu Grid -->
+    <div class="menu-grid" id="menuGrid">
+      <!-- Item menu akan dimuat otomatis via JavaScript -->
+    </div>
+
   </main>
+
+  <!-- Sticky Bottom Navigation / Cart Bar -->
+  <div class="cart-bar hidden" id="cartBar">
+    <div class="cart-summary" onclick="bukaModalCart()">
+      <div class="cart-icon-wrapper">
+        🛒 <span class="cart-count-badge" id="cartBadgeCount">0</span>
+      </div>
+      <div>
+        <div class="cart-text">Total Pesanan</div>
+        <div class="cart-total-price" id="cartBarTotal">Rp 0</div>
+      </div>
+    </div>
+    <button class="btn-checkout" onclick="bukaModalCart()">Lihat Pesanan 🚀</button>
+  </div>
+
+  <!-- Cart Modal Slide-Up -->
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🛍️ Rincian Pesanan Kamu</h2>
+        <button class="btn-close" onclick="tutupModalCart()">✕</button>
+      </div>
+
+      <!-- Item Keranjang -->
+      <div class="cart-items-list" id="cartItemsList">
+        <!-- Item keranjang dimasukkan via JS -->
+      </div>
+
+      <!-- Form Pengisian No Meja & Nama -->
+      <div class="checkout-form">
+        <div class="form-group">
+          <label for="noMeja">Nomor Meja Kamu 📍</label>
+          <input type="text" id="noMeja" placeholder="Contoh: Meja 05 / Area Outdoor 2" required>
+        </div>
+        <div class="form-group">
+          <label for="namaPemesan">Nama Kamu / Panggilan 😎</label>
+          <input type="text" id="namaPemesan" placeholder="Contoh: Rizky / Sarah" required>
+        </div>
+        <div class="form-group">
+          <label for="catatan">Catatan Tambahan (Opsional) 📝</label>
+          <textarea id="catatan" rows="2" placeholder="Contoh: Kopi yang satu Less Sugar ya, Sambal dipisah."></textarea>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <div class="modal-total-row">
+          <span>Total Pembayaran:</span>
+          <span class="modal-total-price" id="modalTotalPrice">Rp 0</span>
+        </div>
+        <button class="btn-wa-submit" onclick="kirimKeWhatsApp()">
+          Pesan via WhatsApp Kasir 📲
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
