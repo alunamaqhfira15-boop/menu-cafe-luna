@@ -1,13 +1,12 @@
+/* --- PENGATURAN DASAR & WARNA UTAMA --- */
 :root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --bg-color: #f8fafc;
-  --card-bg: #ffffff;
-  --text-dark: #0f172a;
-  --text-muted: #64748b;
-  --accent-gold: #f59e0b;
-  --danger: #ef4444;
-  --radius: 16px;
+  --primary: #6366f1;       /* Warna utama (Ungu/Indigo modern) */
+  --bg-color: #f8fafc;      /* Warna latar belakang halaman */
+  --card-bg: #ffffff;       /* Warna latar kartu menu */
+  --text-dark: #0f172a;     /* Warna teks utama */
+  --text-muted: #64748b;    /* Warna teks sekunder/abu-abu */
+  --danger: #ef4444;        /* Warna peringatan / stok habis */
+  --radius: 16px;           /* Tingkat kelengkungan sudut elemen */
 }
 
 * {
@@ -21,10 +20,10 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-dark);
-  padding-bottom: 100px;
+  padding-bottom: 100px; /* Memberi ruang agar konten terbawah tidak tertutup keranjang */
 }
 
-/* Header */
+/* --- BAGIAN HEADER APLIKASI --- */
 .app-header {
   background: linear-gradient(135deg, #4f46e5, #9333ea);
   color: white;
@@ -62,7 +61,7 @@ body {
   opacity: 0.9;
 }
 
-/* Container & Search */
+/* --- KONTROL UTAMA & PENCARIAN --- */
 .main-content {
   max-width: 600px;
   margin: 0 auto;
@@ -85,18 +84,18 @@ body {
   outline: none;
 }
 
-/* Filter Kategori */
+/* --- TOMBOL FILTER KATEGORI (HORIZONTAL SCROLL) --- */
 .category-list {
   display: flex;
   gap: 10px;
   overflow-x: auto;
   padding-bottom: 10px;
   margin-bottom: 15px;
-  scrollbar-width: none;
+  scrollbar-width: none; /* Menyembunyikan scrollbar di Firefox */
 }
 
 .category-list::-webkit-scrollbar {
-  display: none;
+  display: none; /* Menyembunyikan scrollbar di Chrome/Safari */
 }
 
 .cat-btn {
@@ -118,7 +117,7 @@ body {
   color: white;
 }
 
-/* Grid Menu */
+/* --- GRID & KARTU MENU --- */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -126,7 +125,7 @@ body {
 }
 
 .menu-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.03);
@@ -206,6 +205,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s;
 }
 
 .btn-add:hover {
@@ -225,7 +225,7 @@ body {
   font-size: 14px;
 }
 
-/* Sticky Bottom Bar */
+/* --- TOMBOL KERANJANG MELAYANG (STICKY BOTTOM BAR) --- */
 .cart-bar {
   position: fixed;
   bottom: 16px;
@@ -297,7 +297,7 @@ body {
   cursor: pointer;
 }
 
-/* Modal Checkout Overlay */
+/* --- JENDELA MODAL KERANJANG (SLIDE-UP) --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -395,6 +395,7 @@ body {
   font-weight: 800;
 }
 
+/* --- FORM CHECKOUT & TOMBOL WHATSAPP --- */
 .checkout-form {
   display: flex;
   flex-direction: column;
@@ -414,7 +415,8 @@ body {
   color: var(--text-dark);
 }
 
-.form-group input, .form-group textarea {
+.form-group input, 
+.form-group textarea {
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid #cbd5e1;
