@@ -3,12 +3,452 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kopi Senja & Chill - E-Menu</title>
+  <title>Senja & Chill Cafe - E-Menu</title>
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    :root {
+      --primary: #6366f1;
+      --bg-color: #f8fafc;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      padding-bottom: 100px;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      color: white;
+      padding: 24px 20px 28px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-box {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-subtitle {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .main-content {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .search-box {
+      margin-top: -18px;
+      margin-bottom: 20px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: none;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .category-list {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      scrollbar-width: none;
+    }
+
+    .category-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      white-space: nowrap;
+      padding: 10px 18px;
+      border-radius: 20px;
+      border: none;
+      background: white;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .cat-btn.active {
+      background: var(--text-dark);
+      color: white;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+
+    .menu-card {
+      background: white;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .card-img-container {
+      width: 100%;
+      height: 120px;
+      position: relative;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tag-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      color: white;
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .card-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .item-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .item-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.3;
+      margin-bottom: 10px;
+      flex-grow: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .item-price {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .btn-add {
+      background: #f1f5f9;
+      color: var(--text-dark);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-add:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .soldout-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--danger);
+      font-size: 14px;
+    }
+
+    .cart-bar {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 560px;
+      background: var(--text-dark);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      z-index: 99;
+    }
+
+    .cart-bar.hidden {
+      display: none;
+    }
+
+    .cart-summary {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .cart-icon-wrapper {
+      position: relative;
+      font-size: 22px;
+    }
+
+    .cart-count-badge {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background: var(--primary);
+      color: white;
+      font-size: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .cart-text {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .cart-total-price {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .btn-checkout {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal-card {
+      background: white;
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .btn-close {
+      background: #f1f5f9;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .cart-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .cart-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .cart-item-info h4 {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cart-item-info p {
+      font-size: 12px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-qty {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .qty-val {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .checkout-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .form-group input, .form-group textarea {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .modal-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .modal-total-price {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .btn-wa-submit {
+      width: 100%;
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
@@ -23,7 +463,7 @@
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Main Content -->
   <main class="main-content">
     
     <!-- Search Bar -->
@@ -41,7 +481,7 @@
 
     <!-- Menu Grid -->
     <div class="menu-grid" id="menuGrid">
-      <!-- Item menu akan dimuat otomatis via JavaScript -->
+      <!-- Item menu dimuat otomatis via JavaScript -->
     </div>
 
   </main>
@@ -102,6 +542,263 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // === NOMOR WHATSAPP KASIR (Ganti dengan nomor tujuan asli) ===
+    const NOMOR_WA_KAFE = "6281234567890";
+
+    // === DATA MENU KAFE ===
+    const dataMenu = [
+      {
+        id: 1,
+        nama: "Es Kopi Milkshake Senja",
+        kategori: "kopi",
+        harga: 18000,
+        deskripsi: "Signature espresso + susu creamy + gula aren asli. Bikin nagih!",
+        gambar: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80",
+        tag: "⭐ Best Seller",
+        tersedia: true
+      },
+      {
+        id: 2,
+        nama: "Americano Cold Press",
+        kategori: "kopi",
+        harga: 15000,
+        deskripsi: "Espresso dingin tanpa gula, pas buat yang lagi kejar deadline.",
+        gambar: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=400&q=80",
+        tag: "⚡ Bikin Melek",
+        tersedia: true
+      },
+      {
+        id: 3,
+        nama: "Matcha Latte Creamy",
+        kategori: "non-kopi",
+        harga: 22000,
+        deskripsi: "Matcha Kyoto murni dipadu susu gurih segar.",
+        gambar: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=400&q=80",
+        tag: "🍵 Favorite",
+        tersedia: true
+      },
+      {
+        id: 4,
+        nama: "Berry Choco Ice",
+        kategori: "non-kopi",
+        harga: 20000,
+        deskripsi: "Perpaduan cokelat pekat dan sirup stroberi dingin.",
+        gambar: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80",
+        tag: "🍓 Seger Banget",
+        tersedia: true
+      },
+      {
+        id: 5,
+        nama: "Kentang Goreng Truffle",
+        kategori: "makanan",
+        harga: 16000,
+        deskripsi: "French fries renyah bertabur bumbu gurih khas kafe.",
+        gambar: "https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=80",
+        tag: "🍟 Wajib Coba",
+        tersedia: true
+      },
+      {
+        id: 6,
+        nama: "Toast Cokelat Keju Lumer",
+        kategori: "makanan",
+        harga: 18000,
+        deskripsi: "Roti panggang crispy melimpah isi cokelat & keju.",
+        gambar: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=400&q=80",
+        tag: "🧀 Melted",
+        tersedia: false
+      }
+    ];
+
+    let keranjang = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      tampilkanMenu(dataMenu);
+
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        const kataKunci = e.target.value.toLowerCase();
+        const hasilFilter = dataMenu.filter(item =>
+          item.nama.toLowerCase().includes(kataKunci) ||
+          item.deskripsi.toLowerCase().includes(kataKunci)
+        );
+        tampilkanMenu(hasilFilter);
+      });
+    });
+
+    function formatRupiah(angka) {
+      return "Rp " + angka.toLocaleString("id-ID");
+    }
+
+    function tampilkanMenu(daftar) {
+      const container = document.getElementById("menuGrid");
+      container.innerHTML = "";
+
+      if (daftar.length === 0) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 20px; color:#64748b;">Menu tidak ditemukan 😅</p>`;
+        return;
+      }
+
+      daftar.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "menu-card";
+
+        card.innerHTML = `
+          <div class="card-img-container">
+            <img src="${item.gambar}" alt="${item.nama}" class="card-img" loading="lazy">
+            ${item.tag ? `<span class="tag-badge">${item.tag}</span>` : ""}
+            ${!item.tersedia ? `<div class="soldout-overlay">STOK HABIS</div>` : ""}
+          </div>
+          <div class="card-body">
+            <h3 class="item-title">${item.nama}</h3>
+            <p class="item-desc">${item.deskripsi}</p>
+            <div class="card-footer">
+              <span class="item-price">${formatRupiah(item.harga)}</span>
+              ${item.tersedia 
+                ? `<button class="btn-add" onclick="tambahKeKeranjang(${item.id})">+</button>` 
+                : `<button class="btn-add" disabled style="opacity: 0.4;">+</button>`
+              }
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterKategori(kategori, btnElement) {
+      document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
+      btnElement.classList.add("active");
+
+      if (kategori === "semua") {
+        tampilkanMenu(dataMenu);
+      } else {
+        const hasil = dataMenu.filter(item => item.kategori === kategori);
+        tampilkanMenu(hasil);
+      }
+    }
+
+    function tambahKeKeranjang(id) {
+      const itemMenu = dataMenu.find(m => m.id === id);
+      const itemDiKeranjang = keranjang.find(item => item.id === id);
+
+      if (itemDiKeranjang) {
+        itemDiKeranjang.qty += 1;
+      } else {
+        keranjang.push({ ...itemMenu, qty: 1 });
+      }
+
+      updateCartBar();
+    }
+
+    function ubahKuantitas(id, perubahan) {
+      const index = keranjang.findIndex(item => item.id === id);
+      if (index !== -1) {
+        keranjang[index].qty += perubahan;
+        if (keranjang[index].qty <= 0) {
+          keranjang.splice(index, 1);
+        }
+      }
+
+      updateCartBar();
+      renderCartModal();
+    }
+
+    function hitungTotal() {
+      return keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+    }
+
+    function hitungTotalItem() {
+      return keranjang.reduce((sum, item) => sum + item.qty, 0);
+    }
+
+    function updateCartBar() {
+      const cartBar = document.getElementById("cartBar");
+      const totalItem = hitungTotalItem();
+
+      if (totalItem > 0) {
+        cartBar.classList.remove("hidden");
+        document.getElementById("cartBadgeCount").innerText = totalItem;
+        document.getElementById("cartBarTotal").innerText = formatRupiah(hitungTotal());
+      } else {
+        cartBar.classList.add("hidden");
+        tutupModalCart();
+      }
+    }
+
+    function renderCartModal() {
+      const listContainer = document.getElementById("cartItemsList");
+      listContainer.innerHTML = "";
+
+      if (keranjang.length === 0) {
+        listContainer.innerHTML = `<p style="text-align:center; color:#64748b; padding:15px;">Keranjangmu kosong nih.</p>`;
+      } else {
+        keranjang.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "cart-item-row";
+          row.innerHTML = `
+            <div class="cart-item-info">
+              <h4>${item.nama}</h4>
+              <p>${formatRupiah(item.harga * item.qty)}</p>
+            </div>
+            <div class="qty-controls">
+              <button class="btn-qty" onclick="ubahKuantitas(${item.id}, -1)">-</button>
+              <span class="qty-val">${item.qty}</span>
+              <button class="btn-qty" onclick="ubahKuantitas(${item.id}, 1)">+</button>
+            </div>
+          `;
+          listContainer.appendChild(row);
+        });
+      }
+
+      document.getElementById("modalTotalPrice").innerText = formatRupiah(hitungTotal());
+    }
+
+    function bukaModalCart() {
+      renderCartModal();
+      document.getElementById("modalOverlay").classList.remove("hidden");
+    }
+
+    function tutupModalCart() {
+      document.getElementById("modalOverlay").classList.add("hidden");
+    }
+
+    function kirimKeWhatsApp() {
+      const noMeja = document.getElementById("noMeja").value.trim();
+      const namaPemesan = document.getElementById("namaPemesan").value.trim();
+      const catatan = document.getElementById("catatan").value.trim();
+
+      if (!noMeja || !namaPemesan) {
+        alert("Mohon isi Nomor Meja dan Nama Kamu terlebih dahulu ya! 🙏");
+        return;
+      }
+
+      if (keranjang.length === 0) {
+        alert("Keranjang belanjaan kamu masih kosong!");
+        return;
+      }
+
+      let pesan = `*HALO KASIR, ADA PESANAN BARU!* ☕✨\n\n`;
+      pesan += `📍 *No. Meja:* ${noMeja}\n`;
+      pesan += `👤 *Nama:* ${namaPemesan}\n`;
+      pesan += `-----------------------------------\n`;
+      pesan += `*RINCIAN PESANAN:*\n`;
+
+      keranjang.forEach(item => {
+        pesan += `• ${item.nama} (${item.qty}x) = ${formatRupiah(item.harga * item.qty)}\n`;
+      });
+
+      pesan += `-----------------------------------\n`;
+      pesan += `💰 *TOTAL BAYAR:* ${formatRupiah(hitungTotal())}\n`;
+
+      if (catatan) {
+        pesan += `📝 *Catatan Tambahan:* ${catatan}\n`;
+      }
+
+      pesan += `\nMohon diproses ya, terima kasih! 🙌`;
+
+      const linkWA = `https://wa.me/${NOMOR_WA_KAFE}?text=${encodeURIComponent(pesan)}`;
+      window.open(linkWA, "_blank");
+    }
+  </script>
 </body>
 </html>
